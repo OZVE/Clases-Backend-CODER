@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC+OsmanRamirez</title>
+</head>
+<body>
+    <script>
+       function UsuarioB(nombre, apellido, libros, mascotas){
+           this.nombre = nombre;
+           this.apellido = apellido;
+           this.libros = libros;
+           this.mascotas = mascotas;
+
+           this.getFullName = () => `${this.nombre} ${this.apellido}`;
+           this.addMascotas = (mascota) => this.mascotas.push(mascota); 
+           this.getMascotas = () => this.mascotas.length;
+           this.addBooks = (nombre, autor) => this.libros.push(
+               {
+                   nombre,
+                   autor
+               }
+           )
+           this.getBooks = () => this.libros.map (e => e.nombre)
+
+       } 
+
+    let oz = new UsuarioB('Oz','Man',[{nombre:'spiderman', autor:'stan lee'}],["pelusa","simba"]);
+       // imprime el nombre completo del usuario
+    console.log(oz.getFullName());
+    //imprime la cantidad de mascotas del usuario
+    console.log(oz.getMascotas());
+    // agrega una mascota a las mascotas del usuario
+    oz.addMascotas("catdog")
+    // aca imprimo de nuevo el nuemero de mascotas para ver que add mascota si esta funcionando
+    console.log(oz.getMascotas());
+    //agrega un libro a los libros del usuario
+    oz.addBooks('harry potter','JK rowling')
+    // imprime los nombres de los libros del usuario
+    console.log(oz.getBooks());
+
+        </script>
+    
+</body>
+</html>

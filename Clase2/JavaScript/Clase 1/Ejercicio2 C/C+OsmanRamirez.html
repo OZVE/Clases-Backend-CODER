@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+             //clases
+             class Usuario{
+            constructor(nombre, apellido, libros, mascotas){
+                this.nombre =  nombre;
+                this.apellido = apellido;
+                this.libros = libros;
+                this.mascotas = mascotas;
+            }   
+            //retorna string con el nombre y apellido del usuario utilizando template string
+            getFullName (){
+                return   `el nombre completo es ${this.nombre} ${this.apellido}`
+            } 
+            // agrega una mascota (mascota) al arreglo de mascotas del usuario sin retornar nada
+            addMascota (mascota){
+                this.mascotas.push(mascota)
+            }
+            //retorna la cantidad de mascotas que tiene el usuario
+            getMascota(){
+                return `${this.nombre} tiene ${this.mascotas.length} mascotas`
+            }
+            //agrega un objeto { nombre: book, autor: autor} al arreglo de libros del usuario sin retornar nada
+            addBook(book, autor){
+                this.libros.push({book, autor})
+            }
+            // retorna un arreglo con solo los nombres del arreglo de libros del usuario
+            getBooks(){
+                const nameOfBooks = this.libros.map(titulos => {
+                    return titulos.book;
+                });
+                return `los libros de ${this.nombre} son: ${nameOfBooks}`
+        
+            }
+        }
+        
+        let oz = new Usuario ("oz","man", [{book: "coder",autor: "house"}], ["pelusa","simba"]);
+        //muestra nombre completo
+        console.log(oz.getFullName());
+        //agrega mascota
+        oz.addMascota('sombre');
+        //muestra numero de mascotas
+        console.log(oz.getMascota());
+        //agrega un objeto al arreglo de libros
+        oz.addBook("el mago de oz","oz");
+        // muestra solo los nombres del arreglo de libros del usuario
+        console.log(oz.getBooks());
+        //aca imprimo el usuario oz, para verificar que todo funciona como es esperado
+        console.log(oz);
+    </script>
+</body>
+</html>
