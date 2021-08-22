@@ -21,9 +21,9 @@ var removeItemFromArr = ( arr, item ) => {
     i !== -1 && arr.splice( i, 1 );
 };
 
-productos.items.push(new Producto ("coffee", 100, "https://cdn2.iconfinder.com/data/icons/barista/256/barista-icons_portafilter-with-tamper-128.png"))
-productos.items.push(new Producto ("Suggar", 5, "https://cdn4.iconfinder.com/data/icons/food-allergy-free-1/512/Noartificialsweetner-256.png"))
-productos.items.push(new Producto ("Milk", 60, "https://cdn1.iconfinder.com/data/icons/barista/256/barista-icons_milk-package-128.png"))
+// productos.items.push(new Producto ("coffee", 100, "https://cdn2.iconfinder.com/data/icons/barista/256/barista-icons_portafilter-with-tamper-128.png"))
+// productos.items.push(new Producto ("Suggar", 5, "https://cdn4.iconfinder.com/data/icons/food-allergy-free-1/512/Noartificialsweetner-256.png"))
+// productos.items.push(new Producto ("Milk", 60, "https://cdn1.iconfinder.com/data/icons/barista/256/barista-icons_milk-package-128.png"))
 
 
 router.get("/", (req, res) => {
@@ -40,7 +40,7 @@ router.get("/", (req, res) => {
 })
 router.get('/vista', (req, res) => {
 
-    res.render("index", productos);
+    res.render("index.pug", productos);
 })
 
 router.get("/:id", (req, res) => {
