@@ -10,7 +10,6 @@ socket.on('message',(data)=>{
     socket.emit('hello','hola...')
 })
 
-
 class Producto {
     constructor (title, price, thumbnail) {
         this.id = productos.length+1

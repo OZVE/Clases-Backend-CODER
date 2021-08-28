@@ -1,18 +1,18 @@
 const express = require("express");
 const handlebars = require("express-handlebars");
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const socket = require('socket.io')
 
+const server = app.listen(8000, function(){
+    console.log('Active')
+});
 
 app.use(express.static('./public'));
+const io = socket(server);
 
 io.on('connection',socket => {
     console.log('Cliente conectado!')
     socket.emit('message',"Hola Ususario!")
-})
-http.listen(8000, ()=>{
-    console.log('init ws')
 })
 
 app.engine("hbs",handlebars(
@@ -24,8 +24,7 @@ app.engine("hbs",handlebars(
     }
     ))
     
-    
-    const productos = require("./rutas/productos.rutas");
+const productos = require("./rutas/productos.rutas");
 app.set("views","./views");
 app.set("view engine","hbs");
-app.use('/', productos);
+app.use('/api/productos', productos);
