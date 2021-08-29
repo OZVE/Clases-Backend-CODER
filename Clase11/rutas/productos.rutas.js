@@ -2,13 +2,7 @@ const express = require('express')
 const router = express.Router()
 router.use(express.json()); 
 router.use(express.urlencoded({ extended: true }));  
-const io = require('socket.io');
-const socket = io();
 
-socket.on('message',(data)=>{
-    console.log(data);
-    socket.emit('hello','hola...')
-})
 
 class Producto {
     constructor (title, price, thumbnail) {

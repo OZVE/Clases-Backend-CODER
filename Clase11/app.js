@@ -1,17 +1,17 @@
 const express = require("express");
 const handlebars = require("express-handlebars");
 const app = express();
-const socket = require('socket.io')
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
-const server = app.listen(8000, function(){
-    console.log('Active')
-});
+const port = 8000;
 
-app.use(express.static('./public'));
-const io = socket(server);
+http.listen(port, ()=> {
+    console.log('Inicializado...')
+})
 
-io.on('connection',socket => {
-    console.log('Cliente conectado!')
+io.on('connection', socket => {
+    console.log('Cliente conectado!'+ socket.id)
     socket.emit('message',"Hola Ususario!")
 })
 
@@ -23,8 +23,10 @@ app.engine("hbs",handlebars(
         partialsDir: __dirname + "/views/partials"
     }
     ))
+   
     
-const productos = require("./rutas/productos.rutas");
-app.set("views","./views");
-app.set("view engine","hbs");
-app.use('/api/productos', productos);
+    const productos = require("./rutas/productos.rutas");
+    app.set("views","./views");
+    app.set("view engine","hbs");
+    app.use(express.static('public'));
+    app.use('/api/productos', productos);
