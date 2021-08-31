@@ -1,5 +1,5 @@
- <div class="container">
-        <form enctype="application/x-www-form-urlencoded">
+ <div class="container" id="formulario">
+        <form onsubmit="return addProduct(this)" enctype="application/x-www-form-urlencoded">
         <div class="row g-3">
   <div class="col-sm">
     <input type="text" name="title" class="form-control" placeholder="title" aria-label="Title" id="title">
@@ -8,9 +8,9 @@
     <input type="text" name="price" class="form-control" placeholder="price" aria-label="Price" id="price">
   </div>
   <div class="col-sm">
-    <input type="text" name="thumbnail" class="form-control" placeholder="thmubnail" aria-label="Thumbnail" id="thumbnail">
+    <input type="text" name="thumbnail" class="form-control" placeholder="thmubnail" aria-label="Thumbnail" id="thumb">
   </div>
    <div class="col-sm">
-     <input type="submit" onsubmit="enviaProducto()" class="btn btn-primary" value="Guardar producto" id="Guardarform">
+     <input type="submit" class="btn btn-primary" value="Guardar producto" id="Guardarform">
   </div>
 </div>
