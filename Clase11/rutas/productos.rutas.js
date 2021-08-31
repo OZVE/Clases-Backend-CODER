@@ -102,14 +102,28 @@ router.delete("/delete/:id", (req, res) => {
 })
 
 
-router.post("/guardarform",(req, res) => {
-    try{
-        let newProduct = req.body;
-        productos.items.push( new Producto (newProduct.title, newProduct.price, newProduct.thumbnail));
-        res.redirect('/api/productos/vista');
-   
-    }catch(err){
-        throw new Error(err)
-    }
-})
-module.exports = router;
+router.post("/guardarform", (req, res) => {
+    
+    let nuevoProducto = req.body;
+   try {
+       productos.push(new Producto(
+           nuevoProducto.title,
+           nuevoProducto.price,
+           nuevoProducto.thumbnail
+           ));
+        res.redirect('/api/productos/vista')
+   } catch(err) {
+    throw new Error(err)
+   }
+
+});
+
+
+    // try{
+           
+    //         
+    // }catch(err) {
+    //     res.status(404).json(err)
+    // }
+
+module.exports = [router, productos];
