@@ -7,6 +7,7 @@
   render(data);
 });
 
+<<<<<<< HEAD
 function render(data) {
   let a = data;
   a.array.forEach(element => {
@@ -31,3 +32,22 @@ function addProduct(e) {
   socket.emit("new-product", producto);
   return false;
 }
+=======
+function enviarProducto (){
+   
+    var url = 'http://localhost:8000/api/productos/guardarform';
+    var data = {title, price,thumb};
+    
+    fetch(url, {
+      method: 'POST', 
+      body: JSON.stringify(data), 
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response));
+
+ };
+});
+>>>>>>> 701d52eb8b854bb2516d861c431f6142fef887d8
