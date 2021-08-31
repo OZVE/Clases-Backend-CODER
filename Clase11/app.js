@@ -22,11 +22,12 @@ io.on("connection", function (socket) {
   socket.emit("messages", productos);
 
   socket.on("new-message", function (data) {
+    console.log(data)
     var anibal = data
-    var length = productos.length+1
+    var length = productos.items.length+1
     anibal.id = length
-    console.log(anibal)
-    productos.push(anibal);
+   
+    productos.items.push(anibal);
 
     io.sockets.emit("messages", productos);
   });

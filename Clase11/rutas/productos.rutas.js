@@ -106,7 +106,7 @@ router.post("/guardarform", (req, res) => {
     
     let nuevoProducto = req.body;
    try {
-       productos.push(new Producto(
+       productos.items.push(new Producto(
            nuevoProducto.title,
            nuevoProducto.price,
            nuevoProducto.thumbnail
