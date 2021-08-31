@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(msg)
     })
 
-
-
 function enviarProducto (){
    
     var url = 'http://localhost:8000/api/productos/guardarform';

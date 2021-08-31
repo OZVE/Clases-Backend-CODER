@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Aplicación con Sockets</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div class="container"> 
+      <div id="messages"></div>
+      <br />
+      <form onsubmit="return addMessage(this)">
+        <div class="row g-3">
+          <div class="col-sm">
+        <input type="text" id="title" placeholder="title" />
+      </div>
+      <div class="col-sm">
+        <input type="text" id="price" placeholder="price" />
+      </div>
+      <div class="col-sm">
+        <input type="text" id="thumb" placeholder="thumbnail" />
+      </div>
+      <div class="col-sm">
+        <input type="submit" value="Enviar!" />
+      </div>
+    </div>
+      </form>
+    </div>
+  </body>
+</html>
+
