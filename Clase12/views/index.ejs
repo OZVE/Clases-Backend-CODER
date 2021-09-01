@@ -13,8 +13,38 @@
   <script src="/main.js"></script>
   </head>
   <body>
-
+    <div class="col-md-10 mx-auto">
+      <div class="card text-center">
+          <div class="card-header">
+              <h1>Products</h1>
+          </div>
     <!-- Optional JavaScript; choose one of the two! -->
+          <div class="card-header">
+              <h3>Talk about the products</h3>
+          </div>
+          <div>
+            <h1>aca ira el chat</h1>
+          </div>
+           <div class="container pt-3">
+              <div class="row  d-flex justify-content-center ">
+              <div class="col-10 pb-3">
+            <form onsubmit="return addMessage(this)"><!--cambiar esto-->
+             <div class="row g-4">
+             <div class="col-3">
+              <input type="text" name="email" class="form-control" placeholder="Email@gmail.com" aria-label="Email" id="email">
+             </div>
+             <div class="col-sm">
+              <input type="text" name="opinion" class="form-control" placeholder="talk about our products" aria-label="opinion" id="opinion">
+             </div>
+             <div class="col-1">
+              <input type="submit" class="btn btn-primary" value="send">
+                </form>
+                </div>
+              </div>
+          </div>
+          <div class="card-header">
+               <h3>Add new product</h3>
+          </div>
     <div class="container pt-3">
       <div class="row  d-flex justify-content-center ">
         <div class="col-8 pb-3">
@@ -35,7 +65,9 @@
         </div>
       </div>
      </div>
-
+     <div class="card text-center">
+      <h3>LIST</h3>
+      </div>
      <div class="container">
       <div class="table">
            <table class="table table-dark table-striped">
