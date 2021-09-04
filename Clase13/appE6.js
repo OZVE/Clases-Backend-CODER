@@ -1,26 +1,19 @@
-"use strict";
-
 //import modules
-var _require = require("constants"),
-    SSL_OP_MSIE_SSLV2_RSA_PADDING = _require.SSL_OP_MSIE_SSLV2_RSA_PADDING;
-
-var express = require("express");
-var app = express();
-var server = require("http").Server(app);
-var io = require("socket.io")(server);
+const { SSL_OP_MSIE_SSLV2_RSA_PADDING } = require("constants");
+const express = require("express");
+const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
 //import poductos.rutas
-var productosRutas = require("./rutas/productos.rutas");
+const productosRutas = require("./rutas/productos.rutas");
 //use router from productos.rutas    
 app.use('/api/productos', productosRutas[0]);
 //use var productos from productos.rutas
-var productos = productosRutas[1];
-var mensajes = [{
-  email: "osman@coder",
-  opinion: "no entiendo nada :)"
-}];
+let productos = productosRutas[1]
+let mensajes = [];
 //set views as folder for ejs
-app.set('views', './views');
-app.set('view engine', 'ejs');
+app.set('views','./views');
+app.set('view engine','ejs');
 //set the folder public as static space
 app.use(express.static("public"));
 
@@ -37,17 +30,17 @@ io.on("connection", function (socket) {
   //receive data with the event new-messages
   socket.on("new-message", function (data) {
     //console log data received
-    console.log(data);
+    console.log(data)
     //push the data into product with the id
-    var anibal = data;
-    var length = productos.items.length + 1;
-    anibal.id = length;
+    let anibal = data
+    let length = productos.items.length+1
+    anibal.id = length
     productos.items.push(anibal);
     //emit va productos with the event messages
     io.sockets.emit("messages", productos);
   });
   //push data received into mensajes
-  socket.on("new-mensaje", function (data) {
+  socket.on("new-mensaje", function(data){
     mensajes.push(data);
     io.sockets.emit("mensajes", mensajes);
   });
@@ -58,3 +51,5 @@ server.listen(8080, function () {
 });
 
 //io socket for chat
+
+

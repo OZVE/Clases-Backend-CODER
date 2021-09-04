@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "module": "commonjs",
   "scripts": {
-    "test": "sanitycheck && <test runner>"
-   
+    "ts": "tsc app.ts -w",
+    "babel": "npx babel appE6.js -o app.js -w",
+    "start": "nodemon --quiet app.js"
   },
   "author": "",
   "license": "ISC",
