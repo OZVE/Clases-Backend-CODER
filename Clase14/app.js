@@ -5,8 +5,10 @@ var app = express();
 var server = require("http").Server(app);
 //import poductos.rutas
 var productosRutas = require("./rutas/productos.rutas");
+var carritosRutas = require("./rutas/carrito.rutas");
 //use router from productos.rutas    
 app.use('/api/productos', productosRutas[0]);
+app.use('/api/carritos', carritosRutas[0]);
 //set views as folder for ejs
 app.set('views', './views');
 app.set('view engine', 'ejs');

@@ -1,8 +1,7 @@
 const productos = require('../rutas/productos.rutas')
-console.log(productos)
 class Producto {
-    constructor(name, description, code, picture, price, stock){
-        this.id = productos.items
+    constructor(id, name, description, code, picture, price, stock){
+        this.id = id
         this.date = new Date()
         this.name = name
         this.description = description
