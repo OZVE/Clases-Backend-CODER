@@ -13,7 +13,16 @@ app.use('/api/carritos', carritosRutas[0]);
 app.set('views', './views');
 app.set('view engine', 'ejs');
 //set the folder public as static space
-app.use(express.static("public"));
+app.get("**",(req,res)=>{
+    res.status(200).json({"error":"ruta equivocada"})
+})
+app.post("**",(req,res)=>{
+    res.status(200).json({"error":"ruta equivocada"})
+})
+app.delete("**",(req,res)=>{
+    res.status(200).json({"error":"ruta equivocada"})
+})
+app.put(express.static("public"));
 //server 
 server.listen(8080, function () {
     console.log("Server active http://localhost:8080");

@@ -1,8 +1,8 @@
 class Carrito {
-    constructor(id, producto){
-        this.id = id
+    constructor(){
+        this.id = 0
         this.date = new Date()
-        this.productos = [{producto}]
+        this.productos = {items:[]}
     }
 }
 module.exports = Carrito;
