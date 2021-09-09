@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router()
 const Carrito = require('../classes/carrito.class');
-const Producto = require('../classes/producto.class');
 const productos = require('../rutas/productos.rutas');
 const productoss = productos[1];
 router.use(express.json());
@@ -9,6 +8,7 @@ router.use(express.urlencoded({ extended: true }));
 
 
 let carritos = [new Carrito()]
+
 var removeItemFromArr = ( arr, item ) => {
     var i = arr.indexOf( item );
     i !== -1 && arr.splice( i, 1 );
@@ -64,23 +64,28 @@ router.get("/:id", (req, res) => {
     
 
 
-
 router.delete("/:id_producto", (req, res) => {
 
     try {
-
         let id_producto = parseInt(req.params.id_producto)
 
-            if(id_producto < carritos.productos.items.length){
-                removeItemFromArr(carritos.productos.items , carritos.productos.items[id_producto])
-                res.status(200).json("elemente deleted")
-            } else {
-                res.status(200).json({"msg":"No hay carritos"})
-            }
+        if(id_producto-1 < carritos[0].productos.items.length){
 
-    }catch(err) {
-        throw new Error(err)
-    }
+                    let elemento = carritos[0].productos.items.filter(element => element.id === id_producto)
+                    let indice = carritos[0].productos.items.indexOf(elemento[0])
+            
+                    removeItemFromArr(carritos[0].productos.items, carritos[0].productos.items[indice])
+
+                    res.status(200).json(carritos[0])
+                    console.log(carritos[0])
+
+                } else {
+                    res.status(200).json({"msg":"No existen productos en el carrito"})
+                }
+        
+        }catch(err) {
+            throw new Error(err)
+        }
 
 })
 
