@@ -1,21 +1,33 @@
 const conectarMaria = require('./mariadb')
-const sqlite = require('./sqlite3')
 const knex = require('knex')(conectarMaria)
-const sqlite3 = require('knex')(sqlite)
-
-sqlite3.schema.hasTable("lista").then(exist => {
-  if(!exist) {    
-return sqlite3.schema.createTable('ms', (table)=> {
-  table.increments().primary();
-  table.string("mensaje", 250);
-}).then (
-  (console.log('tabla creada'),
-
-  (err) => console.log(err),
-  () => sqlite3.destroy())
-)
-}
-})
+const sqlite3 = require('sqlite3').verbose()
+let db = new sqlite3.Database('./db/db.sqlite', (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Connected to the in-memory SQlite database.');
+  });
+  db.serialize(() => {
+    db.each(`CREATE TABLE "mensajes"
+    (
+        [Id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        [name] NVARCHAR(160)  NOT NULL,
+        [mensaje] NVARCHAR(160) NOT NULL,
+        FOREIGN KEY ([Id]) REFERENCES "ID" ([Id])
+                    ON DELETE NO ACTION ON UPDATE NO ACTION
+    );`, (err, row) => {
+      if (err) {
+        console.error(err.message);
+      }
+     
+    });
+  });
+  db.close((err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Close the database connection.');
+  });
 
 
 
