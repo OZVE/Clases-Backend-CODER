@@ -3,12 +3,15 @@ var SSL_OP_MSIE_SSLV2_RSA_PADDING = require("constants").SSL_OP_MSIE_SSLV2_RSA_P
 var express = require('express');
 var app = express();
 var server = require("http").Server(app);
+const cors = require('cors')
 //import poductos.rutas
 var productosRutas = require("./rutas/productos.rutas");
 var carritosRutas = require("./rutas/carrito.rutas");
 //use router from productos.rutas    
 app.use('/api/productos', productosRutas[0]);
 app.use('/api/carritos', carritosRutas[0]);
+
+app.use(cors())
 //set views as folder for ejs
 app.set('views', './views');
 app.set('view engine', 'ejs');
