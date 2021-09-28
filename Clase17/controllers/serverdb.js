@@ -1,33 +1,38 @@
 const conectarMaria = require('./mariadb')
 const knex = require('knex')(conectarMaria)
 const sqlite3 = require('sqlite3').verbose()
-let db = new sqlite3.Database('./db/db.sqlite', (err) => {
+
+
+let db = new sqlite3.Database('./db/messages.sqlite', (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log('Connectado a DB SQLITE');
+});
+db.serialize(() => {
+  db.each(`
+  DROP TABLE IF EXISTS  "mensajes";
+  
+  CREATE TABLE "mensajes"
+  (
+      [Id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      [name] NVARCHAR(160)  NOT NULL,
+      [mensaje] NVARCHAR(160) NOT NULL,
+      FOREIGN KEY ([Id]) REFERENCES "ID" ([Id])
+                  ON DELETE NO ACTION ON UPDATE NO ACTION
+  );`, (err, row) => {
     if (err) {
-      return console.error(err.message);
+      console.error(err.message);
     }
-    console.log('Connected to the in-memory SQlite database.');
+   
   });
-  db.serialize(() => {
-    db.each(`CREATE TABLE "mensajes"
-    (
-        [Id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-        [name] NVARCHAR(160)  NOT NULL,
-        [mensaje] NVARCHAR(160) NOT NULL,
-        FOREIGN KEY ([Id]) REFERENCES "ID" ([Id])
-                    ON DELETE NO ACTION ON UPDATE NO ACTION
-    );`, (err, row) => {
-      if (err) {
-        console.error(err.message);
-      }
-     
-    });
-  });
-  db.close((err) => {
-    if (err) {
-      return console.error(err.message);
-    }
-    console.log('Close the database connection.');
-  });
+});
+db.close((err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+
+});
 
 
 
