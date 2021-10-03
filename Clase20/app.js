@@ -6,11 +6,11 @@ var server = require("http").Server(app);
 const cors = require('cors')
 
 
-var productosRutas = require("./rutas/productos.rutas");
+const {router} = require("./rutas/productos.rutas");
 var carritosRutas = require("./rutas/carrito.rutas");
 //use router from productos.rutas    
-app.use('/api/productos', productosRutas[0]);
-// app.use('/api/carritos', carritosRutas[0]);
+app.use('/api/productos', router);
+app.use('/api/carritos', carritosRutas[0]);
 
 app.use(cors())
 //set views as folder for ejs

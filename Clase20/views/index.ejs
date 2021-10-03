@@ -12,15 +12,15 @@
     <script src="/socket.io/socket.io.js"></script>
   <script src="/main.js"></script>
   </head>
-  <body>
+  <!-- <body>
     <div class="col-md-10 mx-auto">
       <div class="card text-center">
         <div class="card-header">
-            <!-- Title -->
+            <!-- Title 
           <h1>Products</h1>
         </div>
         <div class="card-header">
-            <!-- Subtitle -->
+             Subtitle 
           <h3>Talk about the products</h3>
         </div>
         <div>
@@ -44,8 +44,7 @@
               </form>
             </div>
           </div>
-        <div class="card-header">
-            <!-- Product form -->
+        <div class="card
           <h3>Add new product</h3>
         </div>
     <div class="container pt-3">
@@ -71,7 +70,7 @@
       </div>
     </div>
     <div class="card text-center">
-        <!-- List title -->
+        List title -->
       <h3>LIST</h3>
     </div>
     <div class="container">
@@ -85,9 +84,24 @@
               <th scope="col">thumbnail</th>
             </tr>
           </thead>
-          <tbody id="messages">
+          <tbody>
+           <% if (items.length != 0) { %>
+             <% items.forEach((items) => { %>
+            <tr>
+              <th scope="row"><%= items.id %></th>
+              <td><%= items.title %></td>
+              <td><%= items.price %></td>
+              <td><img src ="<%= items.thumbnail %>"" width="100" height="100"></td>
+            </tr>
+            <% }); %>
+            <% } else { %>
+             <tr>
+               <td colspan="4" class="text-center">No hay productos</td>
+           </tr>
+       <% } %>
         </table>
       </div>
+   </div>
     </div>
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>

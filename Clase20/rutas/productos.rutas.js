@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router()
-// const {Memoria, Mongo} = require("../classes/mongo")
+const {Memoria, Mongo} = require("../classes/mongo")
 const mariaDB = require("../classes/mariadb")
 const FileSys = require("../classes/fs")
-const Sqlite = require("../classes/productos.sqlite")
+const sqlite = require("../classes/sqlite")
+const faker = require('faker')
+
 //---------------------------Escoja la opción -----------------------------------
 
 // "Escoja la base de datos: 0. Memoria / 1. FS / 2. MariaDB Local / 3. MariaDB Remoto / 4. SQLite3 /5. MongoDB Local / 6. MongoDB Atlas / 7. Firebase")
 
-const opcion = 4
+const opcion = 6
 let admin = true;
 
 //--------------------------------------------------------------------------------
@@ -26,18 +28,17 @@ switch(opcion) {
         seleccion.connectDB()
         break;
     case 4:
-        seleccion = new Sqlite()
+        seleccion = new sqlite()
+        seleccion.connectDB() 
+    case 5:
+        seleccion = new Mongo()
         seleccion.connectDB()
+        break;    
+    case 6:
+        seleccion = new Mongo()
+        seleccion.connectDBAtlas()
         break;
-//     case 5:
-//         seleccion = new Mongo()
-//         seleccion.connectDB()
-//         break;    
-//     case 6:
-//         seleccion = new Mongo()
-//         seleccion.connectDBAtlas()
-        //  break;
- }
+}
 
 
 router.use(express.json()); 
@@ -48,11 +49,43 @@ router.get("/", (req, res) => {
     seleccion.show(req, res)
    
 })
-router.get('/vista', (req, res) => {
+router.get('/vista-test/:cant', (req, res) => {
+    const {cant} = req.params
+    let productos={
+        items: []
+    }
+    if(cant > 0){
     
-    res.render("index", productos);
+        for(let i = 0; i < cant; i++){
+    
+            let obj = {
+                title: faker.vehicle.vehicle(),
+                price: faker.commerce.price(),
+                thumbnail: faker.image.transport(100,100,true)
+            }
+            productos.items.push(obj)
+        }
+        res.render("index" , productos );
+    }else{
+        res.render("index", productos)
+    }
 })
+router.get('/vista-test/', (req, res)=>{
+    let productos={
+        items: []
+    }
+    let cant = 10;
+    for(let i = 0; i < cant; i++){
 
+        let obj = {
+            title: faker.vehicle.vehicle(),
+            price: faker.commerce.price(),
+            thumbnail: faker.image.transport(100,100,true)
+        }
+        productos.items.push(obj)
+    }
+    res.render("index" , productos );
+})
 router.get("/:id", (req, res) => {
 
    seleccion.showId(req, res)
@@ -72,4 +105,4 @@ router.delete("/:id", async (req, res) => {
     seleccion.delete(admin, req, res)
 })
 
-    module.exports =[router];
+    module.exports ={router, opcion};
