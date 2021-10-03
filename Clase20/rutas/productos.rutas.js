@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router()
-const {Memoria, Mongo} = require("../classes/mongo")
+// const {Memoria, Mongo} = require("../classes/mongo")
 const mariaDB = require("../classes/mariadb")
 const FileSys = require("../classes/fs")
-
+const Sqlite = require("../classes/productos.sqlite")
 //---------------------------Escoja la opción -----------------------------------
 
 // "Escoja la base de datos: 0. Memoria / 1. FS / 2. MariaDB Local / 3. MariaDB Remoto / 4. SQLite3 /5. MongoDB Local / 6. MongoDB Atlas / 7. Firebase")
 
-const opcion = 1
+const opcion = 4
 let admin = true;
 
 //--------------------------------------------------------------------------------
@@ -25,15 +25,19 @@ switch(opcion) {
         seleccion = new mariaDB()
         seleccion.connectDB()
         break;
-    case 5:
-        seleccion = new Mongo()
+    case 4:
+        seleccion = new Sqlite()
         seleccion.connectDB()
-        break;    
-    case 6:
-        seleccion = new Mongo()
-        seleccion.connectDBAtlas()
         break;
-}
+//     case 5:
+//         seleccion = new Mongo()
+//         seleccion.connectDB()
+//         break;    
+//     case 6:
+//         seleccion = new Mongo()
+//         seleccion.connectDBAtlas()
+        //  break;
+ }
 
 
 router.use(express.json()); 

@@ -1,21 +1,21 @@
 var sqlite3 = require('sqlite3').verbose();
 var express = require('express');
-var http = require('http');
 const path = require("path");
 var app = express();
-var server = http.createServer(app);
-app.use(express.urlencoded({ extended: false }));
-
-
-
-const db_name = path.join(__dirname, "db", "productos.db");
+const db_name = path.join(__dirname, "../DB", "productos.db");
 const db = new sqlite3.Database(db_name, err => {
-  if (err) {
-    return console.error(err.message);
-  }
-  console.log("Successful connection to the database 'productos.db'");
+    if (err) {
+        return console.error(err.message);
+    }
+    console.log("Successful connection to the database 'productos.db'");
 });
 
+app.use(express.urlencoded({ extended: false }));
+
+class Sqlite {
+
+    connectDB(){
+        
 const sql_create = `CREATE TABLE IF NOT EXISTS productos(
   producto_id INTEGER PRIMARY KEY AUTOINCREMENT,
   name VARCHAR(100) NOT NULL,
@@ -43,13 +43,14 @@ db.run(sql_create, err => {
     console.log("Successful creation of 3 productos");
   });
 
-  
-  app.get("/", (req, res) => {
+    }
+
+ show (req, res){
     try{
       const sql = `SELECT * FROM productos ORDER BY producto_id`
       db.all(sql, [], (err, rows) => {
         if (err) {
-          return console.error(err.message);
+         res.json(err);
         }
         res.status(200).json({ model: rows } );
         // console.log( {model: rows})
@@ -59,20 +60,21 @@ db.run(sql_create, err => {
         console.error(err)
     }
    
-})
+}
 
-app.get("/:id", (req, res) => {
+showId (req, res) {
   const id = req.params.id;
   const sql = "SELECT * FROM productos WHERE producto_ID = ?";
   db.get(sql, id, (err, row) => {
     // if (err) ...
     res.status(200).json({ model: row });
   });
-});
+};
 
 
-app.put("/:id", (req, res) => {
+update (req, res){
   const id = req.params.id;
+  console.log(id)
   const producto = [req.body.name, req.body.description, req.body.code, req.body.picture, req.body.price, req.body.stock, id];
   console.log([req.body.name, req.body.description, req.body.code, req.body.picture, req.body.price, req.body.stock, id])
   const sql = "UPDATE productos SET name = ?, description = ?, code = ?, picture = ?, price = ?, stock = ? WHERE (producto_ID = ?)";
@@ -86,9 +88,9 @@ app.put("/:id", (req, res) => {
   
   });
   
-});
+};
 
-app.post("/", (req, res) => {
+create (req, res){
   const sql = `INSERT INTO productos ( name, description, code, picture, price, stock) VALUES ( ?, ?, ?, ?, ?, ?)`;
   const producto = [req.body.name, req.body.description, req.body.code, req.body.picture, req.body.price, req.body.stock];
   console.log([req.body.name, req.body.description, req.body.code, req.body.picture, req.body.price, req.body.stock])
@@ -101,19 +103,18 @@ app.post("/", (req, res) => {
   }
   
   });
-});
+};
  
 // POST /delete/5
-app.delete("/:id", (req, res) => {
+delete (req, res){
   const id = req.params.id;
   const sql = "DELETE FROM productos WHERE producto_ID = ?";
   db.run(sql, id, err => {
     // if (err) ...
     res.json(`product deleted`)
   });
-});
+};
 
+}
 
-server.listen(8080, function () {
-    console.log("Server active http://localhost:8080");
-});
+module.exports = Sqlite
