@@ -1,5 +1,7 @@
 
+const { application } = require("express");
 const express = require("express");
+const session = require("express-session")
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
@@ -7,8 +9,9 @@ const moment = require('moment')
 const {Firebase} = require("./db")
 var date = new Date()
 var dateConverted = moment(date).format('lll');
-const { normalize, denormalize, schema } = require("normalizr")
+
 let mensajes = [];
+
 //set views as folder for ejs
 app.set('views','./views');
 app.set('view engine','ejs');
@@ -16,12 +19,12 @@ app.set('view engine','ejs');
 app.use(express.static("public"));
 
 
-const message = new schema.Entity("message", {
-  author: author
-})
-const messages = new schema.Entity("messages", {
-  messages: [message]
-})
+app.use(session({
+  secret:'123',
+  resave: true,
+  saveUninitialized: true
+}))
+
 
 //server 
 const eugenio = new Firebase
@@ -36,12 +39,7 @@ io.on("connection", function (socket) {
   socket.emit("mensajes", data);
   })
   socket.on("new-mensaje", function(data){
-    const query = {
-      id:1,
-      ...data
-    }
-    const normalizeData = normalize(query, messages)
-      eugenio.createMessage(normalizeData)
+      eugenio.createMessage(data);
       eugenio.readMessage().then(data => {
       io.sockets.emit("mensajes", data);
   });
@@ -49,8 +47,20 @@ io.on("connection", function (socket) {
 });
 app.get('/vista', (req, res) => {
 
-    res.render("index", mensajes);
-})
+  res.render("index", mensajes);
+});
+app.get('/usuarios', (req, res) => {
+
+  req.session.usuario = 'Oz';
+  req.session.rol = 'Admin';
+  req.session.visitas = req.session.visitas ? ++req.session.visitas : 1;
+  res.send(`El Usuario <Strong>${req.session.usuario}</strong>
+              con rol <strong>${req.session.rol}</strong>
+              ha visitado esta pagina <strong>${req.session.visitas}</strong> 
+    
+    `)
+});
+
 server.listen(8080, function () {
   console.log("Server active http://localhost:8080");
 });

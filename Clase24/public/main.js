@@ -7,8 +7,8 @@ var socket = io.connect("http://localhost:8080", { forceNew: true });
 
 // function that render chat
 function renderChat(data) {
-  // console.log(data)
-  var html = data
+  console.log(data)
+  var html = data 
   .map(function (elem, index) {
     console.log(elem, 'aqui eugenio')
     return `<div>
@@ -25,7 +25,7 @@ function renderChat(data) {
 }
 //receive data with event mensajes
 socket.on("mensajes", function (data) {
-  // console.log(data)
+   console.log(data)
   renderChat(data)
 });
 // form onsubmit function
@@ -51,4 +51,15 @@ socket.emit("new-mensaje", mensaje);
   return false;
 }else
 console.log("need email")
+}
+
+function visitas(e){
+  
+  req.session.usuario = 'Oz';
+  req.session.rol = 'Admin';
+  req.session.visitas = req.session.visitas ? ++req.session.visitas : 1;
+  res.send(`El Usuario <Strong>${req.session.usuario}</strong>
+              con rol <strong>${req.session.rol}</strong>
+              ha visitado esta pagina <strong>${req.session.visitas}</strong> `
+  )
 }
