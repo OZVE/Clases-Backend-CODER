@@ -5,19 +5,20 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import moment from 'moment';
 import handlebars from 'express-handlebars';
+import { Server as Socket } from 'socket.io'
 //----------------------------------------//
 
 //CLASSES AND DB
-import Products from './api/products';
-import Messages from './api/messages';
+import Products from './api/products.js';
+import Messages from './api/messages.js';
 import { MongoDB} from './DB/db.js';
-import {getProdRandom} from './random/products.js';
+//import {getProdRandom} from './random/products.js';
 //----------------------------------------------//
 
 //SERVER SETTINGS
 const app = express()
 const server = http.Server(app);
-const io = require("socket.io")(server);
+const io = new Socket(server)
 const router = express.Router();
 app.use('/api', router);
 app.use(express.static('public'));

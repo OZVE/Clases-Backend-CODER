@@ -12,7 +12,7 @@ const productSchema = mongoose.Schema({
 const messageSchema = mongoose.Schema({
         author: Object,
         text: String,
-        fyh: String
+        date: String
 })
 
 export const products = mongoose.model(nameCollectProducts, productSchema);

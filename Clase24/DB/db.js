@@ -1,4 +1,4 @@
-import moongose, { Mongoose } from 'mongoose'
+import mongoose from 'mongoose'
 
 export class MongoDB {
 
