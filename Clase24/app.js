@@ -3,16 +3,18 @@ import express from 'express';
 import http from 'http';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import moment from 'moment';
 import handlebars from 'express-handlebars';
-import { Server as Socket } from 'socket.io'
+import { Server as Socket } from 'socket.io';
+import passport from 'passport';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 //----------------------------------------//
 
 //CLASSES AND DB
 import Products from './api/products.js';
 import Messages from './api/messages.js';
 import { MongoDB} from './DB/db.js';
-//import {getProdRandom} from './random/products.js';
 //----------------------------------------------//
 
 //SERVER SETTINGS
@@ -28,7 +30,7 @@ const PORT = process.env.PORT || 8080;
 const srv = server.listen(PORT, async () =>{
   console.log(`Sever listen port number ${srv.address().PORT}`)
   try{
-    const mongo = new MongoDB('mongodb://localhost/27017/ecommerce')
+    const mongo = new MongoDB('mongodb://localhost/ecommerce')
     await mongo.connect();
     console.log('Mongo DB connected');
   }catch(err){
@@ -39,6 +41,27 @@ const srv = server.listen(PORT, async () =>{
 srv.on('error', err => console.log(`Server error ${err}`))
 //------------------------------------//
 
+//PASSPORT
+const FACEBOOK_CLIENT_ID = '644500950258395';
+const FACEBOOK_CLIENT_SECRET = 'dfe2216da6d5e10941619f316d7398fd';
+passport.use(new FacebookStrategy({
+  clientID: FACEBOOK_CLIENT_ID,
+  clientSecret: FACEBOOK_CLIENT_SECRET,
+  callbackURL:'/auth/facebook/callback',
+  profileFields: ['id', 'displayName', 'photos','emails'],
+  scope: ['email']
+}, function(accessToken,refreshToken, profile, done){
+  let userProfile = profile;
+  return done(null, userProfile);
+}));
+
+passport.serializeUser(function(user, cb){
+  cb(null,user);
+})
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
+//---
 //DECLARE NEW CLASS
 let products = new Products();
 let messages = new Messages();
@@ -52,6 +75,10 @@ var dateConverted = moment(date).format('lll');
 //COOKIE PARS, SESSION SETTINGS AND GET REQ
 app.use(cookieParser());
 app.use(session({
+  store: MongoStore.create({
+    mongoUrl: 'mongodb+srv://mongodbatlasoz:ozmongodbatlas@cluster0.ggzf8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    ttl: 600
+  }),
   secret:'123',
   resave: true,
   saveUninitialized: false,
@@ -60,7 +87,8 @@ app.use(session({
     maxAge: 60000
   }
 }));
-const getSessionName = req => req.session.name? req.session.name: '';
+app.use(passport.initialize());
+app.use(passport.session());
 //----------------------------------------------------------------//
 
 //HBS CONFIGURATION
@@ -77,35 +105,43 @@ app.use(express.static('public'))
 //---------------------------//
 
 //USER LOGIN AND LOGOUT
+
 app.get('/login',(req,res) =>{
-  if(req.session.name){
+  if(req.isAuthenticated()){
     res.render('home', {
-      name: req.session.name
+      name: req.user.displayName,
+      photo: req.user.photos[0].value,
+      email: req.user.emails[0].value,
+      contador: req.user.contador,
     });
   }else{
     res.sendFile(process.cwd() + '/public/login.html')
   }
 })
 
-app.post('/login', (req, res) =>{
-  let {name} = req.body
-  req.session.name = name
-  res.redirect('/')
-})
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback', passport.authenticate('facebook',
+{successRedirect: '/home',
+failureRedirect: '/faillogin'
+}));
+
+app.get('/home', (req,res)=>{
+  res.redirect('/');
+});
+
+app.get('/faillogin', (req,res)=>{
+  res.render('login-error',{});
+});
 
 app.get('/logout', (req,res) =>{
-  let name = getSessionName(req)
-  if(name){
-    req.session.destroy(err => {
-      if(!err) res.render('logout', {name})
-      else res.redirect('/')
-    })
-  }
-})
+  let name = req.user.displayName
+  req.logOut();
+  res.render('logout',{name});
+});
 //-------------------------------------------//
 
 //ROUTES
-router.get('products/list', async (req, res) =>{
+router.get('/products/list', async (req, res) =>{
   res.json(await products.listAll())
 });
 
@@ -141,13 +177,11 @@ router.get('/products/view', async (req,res) =>{
   })
 });
 //--------------------------------------------------------------//
-
 //WEB SOCKET SOCKET.IO
-io.on("connection", async (socket) => {
+io.on("connection", async socket => {
   console.log("Somebody connected");
     //send messages to the new client
   socket.emit("products", await products.get());
-  });
 
   //listen messages and send to everybody
   socket.on("update", async data => {
@@ -164,4 +198,5 @@ socket.emit('messages', await messages.getAll());
 socket.on('new-message', async data => {
   await messages.save(data);
   io.socket.emit('messages', await messages.getAll());
+})
 });

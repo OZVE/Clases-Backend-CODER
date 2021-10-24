@@ -14,17 +14,9 @@
         <div class="jumbotron">
             <h1>Login de Usuario</h1>
             <br>
-
-            <!-- <form action="/api/products/create" method="POST" autocomplete="off"> -->
-            <form action="/login" method="post" autocomplete="off">
-                <!-- Name of product field -->
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input id="name" class="form-control" type="text" name="name" required>
-                </div>
-
-                <!-- Send button -->
-                <button class="btn btn-success mt-3">Send</button>
+            <div class="form-group">
+                <input class="btn btn-primary my-3" type="submit" value="Login con Facebook" onclick="location.href = '/auth/facebook'">
+            </div>
             </form>
         </div>
     </div>
