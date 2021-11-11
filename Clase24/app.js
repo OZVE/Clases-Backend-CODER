@@ -9,8 +9,14 @@ import handlebars from 'express-handlebars';
 import { Server as Socket } from 'socket.io';
 import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
-//----------------------------------------//
+import cluster from 'cluster';
+import compression from 'compression';
+import  Log4js  from 'log4js';
+import  fork  from 'child_process';
+import * as os from 'os';
 
+//----------------------------------------//
+const CON_CHILD_PROCESS_FORK = false;
 //CLASSES AND DB
 import Products from './api/products.js';
 import Messages from './api/messages.js';
@@ -28,20 +34,60 @@ router.use(express.json());
 router.use(express.urlencoded({extended: true}));
 const PORT = process.env.PORT || 8080;
 const srv = server.listen(PORT, async () =>{
-  console.log(`Sever listen port number ${srv.address().PORT}`)
+  console.log(`Sever listen port number ${srv.address().PORT}`);
   try{
-    const mongo = new MongoDB('mongodb://localhost/ecommerce')
+    const mongo = new MongoDB('mongodb://localhost/ecommerce');
     await mongo.connect();
     console.log('Mongo DB connected');
   }catch(err){
-    console.log(`Mongo DB Error connection : ${err}`)
+    console.log(`Mongo DB Error connection : ${err}`);
 
   }
 });
-srv.on('error', err => console.log(`Server error ${err}`))
+srv.on('error', err => console.log(`Server error ${err}`));
 //------------------------------------//
 
+//COMPRESSION
+app.use(compression());
+//--------------------//
+
+//LOGGERS
+Log4js.configure({
+    appenders: {
+      miLoggerConsole: { type: "console"},
+      miLoggerFileWarn: { type: 'file', filename: 'warn.log'},
+      miLoggerFileError: {type: 'file', filename: 'error.log'}
+    },
+    categories:{
+      default: {appenders: ['miLoggerConsole'], level: 'trace'},
+      info: {appenders: ["miLoggerConsole"], level: "info"},
+      warn: {appenders: ["miLoggerFileWarn"], level: "warn"},
+      error: { appenders: ["miLoggerFileError"], level: "error"}
+    }
+});
+const loggerInfo = Log4js.getLogger('info');
+const loggerWarn = Log4js.getLogger('warn');
+const loggerError = Log4js.getLogger('Error');
 //PASSPORT
+const numCPUs = os.cpus().length;
+const ClusterMode = process.argv[5] == 'CLUSTER';
+//MASTER
+if(ClusterMode && cluster.isMaster){
+
+  loggerInfo.info(`CPUs Number: ${numCPUs}`);
+  loggerInfo.info(`PID MASTER ${process.pid}`);
+
+  for(let i = 0; i<numCPUs; i++){
+    cluster.fork();
+  }
+
+  cluster.on('exit', worker =>{
+    loggerInfo.info('Worker', worker.process.pid, 'died', new Date().toLocaleString())
+    cluster.fork()
+  })
+}else{
+
+
 const FACEBOOK_CLIENT_ID = '644500950258395';
 const FACEBOOK_CLIENT_SECRET = 'dfe2216da6d5e10941619f316d7398fd';
 passport.use(new FacebookStrategy({
@@ -127,6 +173,10 @@ failureRedirect: '/faillogin'
 
 app.get('/home', (req,res)=>{
   res.redirect('/');
+
+
+});app.get('/chat', (req,res)=>{
+  res.redirect('/home');
 });
 
 app.get('/faillogin', (req,res)=>{
@@ -200,3 +250,4 @@ socket.on('new-message', async data => {
   io.socket.emit('messages', await messages.getAll());
 })
 });
+}
