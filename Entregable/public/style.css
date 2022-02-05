@@ -1,0 +1,13 @@
+.container-form {
+  width: 600px;
+  margin: 20px auto;
+  background: rgb(189, 186, 186);
+}
+
+.container-form {
+  padding: 20px;
+}
+
+.title-chat {
+  text-align: center;
+}
